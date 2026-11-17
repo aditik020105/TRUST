@@ -1,0 +1,31 @@
+# One orderer organisation and one organisation per agency (paper Section III-B).
+OrdererOrgs:
+  - Name: Orderer
+    Domain: orderer.trust.local
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS: [localhost, 127.0.0.1]
+PeerOrgs:
+  - Name: Police
+    Domain: police.trust.local
+    EnableNodeOUs: true
+    Template: { Count: 1, SANS: [localhost, 127.0.0.1] }
+    Users: { Count: 1 }
+  - Name: Forensics
+    Domain: forensics.trust.local
+    EnableNodeOUs: true
+    Template: { Count: 1, SANS: [localhost, 127.0.0.1] }
+    Users: { Count: 1 }
+  - Name: Judiciary
+    Domain: judiciary.trust.local
+    EnableNodeOUs: true
+    Template: { Count: 1, SANS: [localhost, 127.0.0.1] }
+    Users: { Count: 1 }
+  # Consortium administrators: a client-only organisation (no peer). Its transactions are
+  # endorsed by the agencies' peers like everyone else's.
+  - Name: Admin
+    Domain: admin.trust.local
+    EnableNodeOUs: true
+    Template: { Count: 0 }
+    Users: { Count: 1 }

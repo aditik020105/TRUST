@@ -1,0 +1,23 @@
+{
+  "name": "trust-evidence-chaincode",
+  "version": "2.0.0",
+  "description": "TRUST chain-of-custody chaincode for Hyperledger Fabric",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "sync-logic": "cp ../trust-backend/src/ledger/evidence-logic.ts src/evidence-logic.ts",
+    "build": "tsc",
+    "start": "set -x && fabric-chaincode-node start"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "fabric-contract-api": "^2.5.8",
+    "fabric-shim": "^2.5.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

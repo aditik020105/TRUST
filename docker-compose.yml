@@ -1,0 +1,78 @@
+version: '3.8'
+
+# TRUST (Tamper-Proof Chain of Custody for Digital Evidence)
+# Containerized Infrastructure & Multi-Agency Microservices Stack
+
+services:
+  # 1. Distributed In-Memory State for DDoS Mitigation, Rate Limiting & Jail Management
+  trust-redis:
+    image: redis:7-alpine
+    container_name: trust-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - trust-network
+
+  # 2. Open Policy Agent (Zero-Trust ABAC / RBAC Decision Engine)
+  trust-opa:
+    image: openpolicyagent/opa:latest
+    container_name: trust-opa
+    restart: unless-stopped
+    ports:
+      - "8181:8181"
+    command:
+      - "run"
+      - "--server"
+      - "--log-level=info"
+    networks:
+      - trust-network
+
+  # 3. High-Security Evidence API Backend
+  trust-backend:
+    build:
+      context: ./trust-backend
+      dockerfile: Containerfile
+    container_name: trust-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./trust-backend/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - REDIS_URL=redis://trust-redis:6379
+    depends_on:
+      - trust-redis
+      - trust-opa
+    networks:
+      - trust-network
+
+  # 4. Digital Evidence Management Dashboard (Next.js Frontend)
+  trust-dashboard:
+    build:
+      context: ./trust-dashboard
+      dockerfile: Containerfile
+    container_name: trust-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      - trust-backend
+    networks:
+      - trust-network
+
+volumes:
+  redis_data:
+
+networks:
+  trust-network:
+    driver: bridge
+

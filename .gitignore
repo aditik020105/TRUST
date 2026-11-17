@@ -1,0 +1,86 @@
+# ==============================================================================
+# TRUST Platform - Comprehensive Secrets, Keys & Runtime Data GitIgnore
+# ==============================================================================
+
+# --- 1. Environment & Secrets Files ---
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.local
+!*.env.example
+!.env.example
+
+# --- 2. Cryptographic Keys & Certificates ---
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.pub
+id_rsa
+id_ecdsa
+id_ed25519
+*.trustkey.json
+*trustkey*.json
+
+# --- 3. Pre-seeded & Demo Key Folders ---
+demo-keys/
+**/demo-keys/
+trust-backend/demo-keys/
+trust-dashboard/public/demo-keys/
+
+# --- 4. Hyperledger Fabric Runtime, MSP Credentials & State ---
+fabric/**/.run/
+fabric/native/.run/
+fabric/multi-org/.run/
+*.block
+*.tar.gz
+gateway-orgs.json
+package-id
+pids
+.run/
+
+# --- 5. Off-Chain File Storage, Databases & Backups ---
+storage/
+data/
+**/storage/
+**/data/
+trust-backend/storage/
+trust-backend/data/
+trust-backend/backups/
+trust-backend/bench-results/
+
+# --- 6. Dependencies & Build Artifacts ---
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+.next/
+**/next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.pnp
+.pnp.*
+
+# --- 7. Debug & Runtime Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- 8. OS & IDE Metadata ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/

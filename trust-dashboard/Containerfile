@@ -1,0 +1,22 @@
+# Containerfile for TRUST Digital Evidence Dashboard
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy application source
+COPY . .
+
+ENV NODE_ENV=production
+ENV NEXT_PUBLIC_API_URL=http://localhost:3001
+ENV PORT=3000
+
+# Build Next.js production bundle
+RUN rm -rf .next tsconfig.tsbuildinfo && npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]

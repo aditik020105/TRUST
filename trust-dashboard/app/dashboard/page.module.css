@@ -1,0 +1,253 @@
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.heading {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.subheading {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+}
+
+.loading {
+  font-size: 0.9rem;
+  color: #6b7280;
+  padding: 2rem 0;
+}
+
+/* ── Stats ── */
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.green .statNumber { color: #166534; }
+.yellow .statNumber { color: #854d0e; }
+.red .statNumber { color: #991b1b; }
+
+/* ── Case list ── */
+
+.caseList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Case folder ── */
+
+.caseFolder {
+  border: 0.5px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.caseFolderOpen {
+  border-color: #d1d5db;
+}
+
+/* ── Folder header ── */
+
+.caseFolderHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.caseFolderHeader:hover {
+  background: #f9fafb;
+}
+
+.folderIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  border: 0.5px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #6b7280;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.folderIconOpen {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.caseMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.caseId {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  letter-spacing: 0.01em;
+}
+
+.caseSub {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.casePills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.casePill {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.pillVerified {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.pillPending {
+  background: #fffbeb;
+  color: #854d0e;
+}
+
+.chevron {
+  display: flex;
+  align-items: center;
+  color: #9ca3af;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Folder body ── */
+
+.caseFolderBody {
+  border-top: 0.5px solid #e5e7eb;
+}
+
+/* ── Tabs ── */
+
+.tabs {
+  display: flex;
+  padding: 0 16px;
+  background: #f9fafb;
+  border-bottom: 0.5px solid #e5e7eb;
+}
+
+.tab {
+  font-size: 12px;
+  padding: 9px 12px;
+  cursor: pointer;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -0.5px;
+  letter-spacing: 0.01em;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.tab:hover {
+  color: #374151;
+}
+
+.activeTab {
+  color: #111827;
+  font-weight: 500;
+  border-bottom-color: #166534;
+}
+
+/* ── Content area ── */
+
+.caseContent {
+  padding: 14px 16px;
+}
+
+/* ── Groups ── */
+
+.group {
+  margin-bottom: 16px;
+}
+
+.group:last-child {
+  margin-bottom: 0;
+}
+
+.groupLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin: 0 0 8px;
+  padding-bottom: 7px;
+  border-bottom: 0.5px solid #f3f4f6;
+}
+
+/* ── Evidence card grid ── */
+/* minmax(200px) keeps cards compact and forces horizontal layout */
+
+.grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+}

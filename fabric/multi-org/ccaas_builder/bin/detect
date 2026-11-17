@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# $1 = chaincode source dir, $2 = metadata dir
+grep -q '"type"[[:space:]]*:[[:space:]]*"ccaas"' "$2/metadata.json"

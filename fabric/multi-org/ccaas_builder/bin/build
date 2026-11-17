@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# $1 = source dir, $2 = metadata dir, $3 = build output dir
+set -euo pipefail
+cp "$1/connection.json" "$3/connection.json"
+[ -d "$1/metadata" ] && cp -r "$1/metadata" "$3/" || true

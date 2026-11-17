@@ -1,0 +1,109 @@
+# Channel with three agency organisations and a client-only admin organisation.
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: crypto/ordererOrganizations/orderer.trust.local/msp
+    Policies:
+      Readers: { Type: Signature, Rule: "OR('OrdererMSP.member')" }
+      Writers: { Type: Signature, Rule: "OR('OrdererMSP.member')" }
+      Admins:  { Type: Signature, Rule: "OR('OrdererMSP.admin')" }
+    OrdererEndpoints: [127.0.0.1:7050]
+  - &Police
+    Name: PoliceOrgMSP
+    ID: PoliceOrgMSP
+    MSPDir: crypto/peerOrganizations/police.trust.local/msp
+    Policies:
+      Readers:     { Type: Signature, Rule: "OR('PoliceOrgMSP.admin', 'PoliceOrgMSP.peer', 'PoliceOrgMSP.client')" }
+      Writers:     { Type: Signature, Rule: "OR('PoliceOrgMSP.admin', 'PoliceOrgMSP.client')" }
+      Admins:      { Type: Signature, Rule: "OR('PoliceOrgMSP.admin')" }
+      Endorsement: { Type: Signature, Rule: "OR('PoliceOrgMSP.peer')" }
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 7051
+  - &Forensics
+    Name: ForensicsOrgMSP
+    ID: ForensicsOrgMSP
+    MSPDir: crypto/peerOrganizations/forensics.trust.local/msp
+    Policies:
+      Readers:     { Type: Signature, Rule: "OR('ForensicsOrgMSP.admin', 'ForensicsOrgMSP.peer', 'ForensicsOrgMSP.client')" }
+      Writers:     { Type: Signature, Rule: "OR('ForensicsOrgMSP.admin', 'ForensicsOrgMSP.client')" }
+      Admins:      { Type: Signature, Rule: "OR('ForensicsOrgMSP.admin')" }
+      Endorsement: { Type: Signature, Rule: "OR('ForensicsOrgMSP.peer')" }
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 8051
+  - &Judiciary
+    Name: JudiciaryOrgMSP
+    ID: JudiciaryOrgMSP
+    MSPDir: crypto/peerOrganizations/judiciary.trust.local/msp
+    Policies:
+      Readers:     { Type: Signature, Rule: "OR('JudiciaryOrgMSP.admin', 'JudiciaryOrgMSP.peer', 'JudiciaryOrgMSP.client')" }
+      Writers:     { Type: Signature, Rule: "OR('JudiciaryOrgMSP.admin', 'JudiciaryOrgMSP.client')" }
+      Admins:      { Type: Signature, Rule: "OR('JudiciaryOrgMSP.admin')" }
+      Endorsement: { Type: Signature, Rule: "OR('JudiciaryOrgMSP.peer')" }
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 9051
+  - &Admin
+    Name: AdminOrgMSP
+    ID: AdminOrgMSP
+    MSPDir: crypto/peerOrganizations/admin.trust.local/msp
+    Policies:
+      Readers:     { Type: Signature, Rule: "OR('AdminOrgMSP.admin', 'AdminOrgMSP.client')" }
+      Writers:     { Type: Signature, Rule: "OR('AdminOrgMSP.admin', 'AdminOrgMSP.client')" }
+      Admins:      { Type: Signature, Rule: "OR('AdminOrgMSP.admin')" }
+      Endorsement: { Type: Signature, Rule: "OR('AdminOrgMSP.peer')" }
+
+Capabilities:
+  Channel: &ChannelCapabilities { V2_0: true }
+  Orderer: &OrdererCapabilities { V2_0: true }
+  Application: &ApplicationCapabilities { V2_5: true }
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers: { Type: ImplicitMeta, Rule: "ANY Readers" }
+    Writers: { Type: ImplicitMeta, Rule: "ANY Writers" }
+    Admins:  { Type: ImplicitMeta, Rule: "MAJORITY Admins" }
+    # Chaincode definitions need the three agencies (3 of the 4 organisations) to agree.
+    LifecycleEndorsement: { Type: ImplicitMeta, Rule: "MAJORITY Endorsement" }
+    Endorsement:          { Type: ImplicitMeta, Rule: "MAJORITY Endorsement" }
+  Capabilities: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses: [127.0.0.1:7050]
+  EtcdRaft:
+    Consenters:
+      - Host: 127.0.0.1
+        Port: 7050
+        ClientTLSCert: crypto/ordererOrganizations/orderer.trust.local/orderers/orderer.orderer.trust.local/tls/server.crt
+        ServerTLSCert: crypto/ordererOrganizations/orderer.trust.local/orderers/orderer.orderer.trust.local/tls/server.crt
+  BatchTimeout: 200ms
+  BatchSize: { MaxMessageCount: 10, AbsoluteMaxBytes: 99 MB, PreferredMaxBytes: 512 KB }
+  Organizations:
+  Policies:
+    Readers: { Type: ImplicitMeta, Rule: "ANY Readers" }
+    Writers: { Type: ImplicitMeta, Rule: "ANY Writers" }
+    Admins:  { Type: ImplicitMeta, Rule: "MAJORITY Admins" }
+    BlockValidation: { Type: ImplicitMeta, Rule: "ANY Writers" }
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers: { Type: ImplicitMeta, Rule: "ANY Readers" }
+    Writers: { Type: ImplicitMeta, Rule: "ANY Writers" }
+    Admins:  { Type: ImplicitMeta, Rule: "MAJORITY Admins" }
+  Capabilities: *ChannelCapabilities
+
+Profiles:
+  EvidenceChannel:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations: [*OrdererOrg]
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations: [*Police, *Forensics, *Judiciary, *Admin]
+      Capabilities: *ApplicationCapabilities
