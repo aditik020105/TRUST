@@ -28,7 +28,17 @@ const allowedOrigins = (process.env.CORS_ORIGINS || "").split(",").map(s => s.tr
 
 // Request pipeline (paper Table VIII): 1 headers/CORS -> 2 firewall -> 3 identity -> 4 policy -> 5 controllers -> 6 ledger
 app.use(cors({
-  origin: allowedOrigins.length ? allowedOrigins : defaultOrigins,
+  origin: (requestOrigin, callback) => {
+    if (!requestOrigin) return callback(null, true)
+    if (allowedOrigins.includes(requestOrigin) || defaultOrigins.includes(requestOrigin)) {
+      return callback(null, true)
+    }
+    // In local development, also allow local hostnames & private subnet IPs (WSL/vEthernet 172.x, 192.168.x, 10.x)
+    if (process.env.NODE_ENV !== "production" && /^http:\/\/(localhost|127\.0\.0\.1|172\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/.test(requestOrigin)) {
+      return callback(null, true)
+    }
+    return callback(null, false)
+  },
   credentials: true,
   methods: ["GET", "POST", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
